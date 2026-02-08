@@ -1,0 +1,12 @@
+[package]
+name = "{{crate_name}}"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+nodecode-terminal-kit = { path = "{{ui_dependency}}" }
+nodecode-terminal-kit-runtime = { path = "{{runtime_dependency}}" }
+ratatui = "0.28"
+crossterm = "0.28"
+
+[workspace]

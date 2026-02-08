@@ -1,0 +1,22 @@
+[package]
+name = "nodecode-terminal-kit-runtime"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/nodecode/nodecode-terminal-kit"
+homepage = "https://github.com/nodecode/nodecode-terminal-kit"
+description = "Bubble Tea-inspired runtime loop for nodecode terminal apps."
+readme = "../../README.md"
+keywords = ["terminal", "tui", "ratatui", "runtime", "tea"]
+categories = ["command-line-utilities"]
+documentation = "https://docs.rs/nodecode-terminal-kit-runtime"
+
+[lib]
+name = "nodecode_terminal_kit_runtime"
+path = "src/lib.rs"
+
+[dependencies]
+ratatui.workspace = true
+crossterm.workspace = true
+thiserror.workspace = true
+nodecode-terminal-kit = { version = "0.1.0", path = "../nodecode-terminal-kit" }

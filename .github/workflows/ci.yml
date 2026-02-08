@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run clippy
+        run: cargo clippy --workspace --all-targets --all-features
+
+      - name: Run tests
+        run: cargo test --workspace --all-features
+
+      - name: Check crates.io dependency availability
+        id: cratesio
+        run: |
+          if curl -fsSL https://crates.io/api/v1/crates/nodecode-terminal-kit >/dev/null; then
+            echo "base_published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "base_published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Package publishable crates
+        run: |
+          cargo package -p nodecode-terminal-kit
+
+      - name: Package runtime (requires base crate on crates.io)
+        if: steps.cratesio.outputs.base_published == 'true'
+        run: cargo package -p nodecode-terminal-kit-runtime
+
+      - name: Runtime package preflight (base crate not yet published)
+        if: steps.cratesio.outputs.base_published != 'true'
+        run: |
+          echo "Skipping runtime package verify until nodecode-terminal-kit exists on crates.io."
+          cargo check -p nodecode-terminal-kit-runtime
+
+      - name: Publish dry-run for independently verifiable crates
+        run: |
+          cargo publish --dry-run -p nodecode-terminal-kit
+
+      - name: Publish dry-run runtime (requires base crate on crates.io)
+        if: steps.cratesio.outputs.base_published == 'true'
+        run: cargo publish --dry-run -p nodecode-terminal-kit-runtime

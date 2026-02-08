@@ -1,0 +1,12 @@
+[package]
+name = "minimal-terminal-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+nodecode-terminal-kit = { path = "../../crates/nodecode-terminal-kit" }
+nodecode-terminal-kit-runtime = { path = "../../crates/nodecode-terminal-kit-runtime" }
+ratatui = "0.28"
+crossterm = "0.28"
+
+[workspace]

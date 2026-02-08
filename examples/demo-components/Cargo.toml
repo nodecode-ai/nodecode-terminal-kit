@@ -1,0 +1,11 @@
+[package]
+name = "demo-components"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ratatui = "0.28"
+crossterm = "0.28"
+nodecode-terminal-kit = { path = "../../crates/nodecode-terminal-kit" }
+
+[workspace]

@@ -1,0 +1,24 @@
+[workspace]
+members = [
+    "crates/nodecode-terminal-kit",
+    "crates/nodecode-terminal-kit-runtime",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/nodecode/nodecode-terminal-kit"
+description = "Reusable design-only terminal UI components for rapid app composition."
+readme = "README.md"
+keywords = ["terminal", "tui", "ratatui", "components", "design-system"]
+categories = ["command-line-utilities"]
+
+[workspace.dependencies]
+ratatui = "0.28"
+crossterm = "0.28"
+tui-textarea = { version = "0.6.1", default-features = false, features = ["ratatui", "crossterm"] }
+unicode-width = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "2.0"
