@@ -63,6 +63,7 @@ pub fn view(hints: &[String], frame: &mut Frame, area: Rect, theme: &Theme) {
         theme,
         Some(theme.style(ThemeElement::BackgroundVoid)),
         None,
+        None,
     );
 }
 
@@ -77,6 +78,9 @@ pub fn view_with_right_info(
     agent_color_override: Option<(u8, u8, u8)>,
 ) {
     let bracket_key_style_override = bracket_key_style(theme, agent, agent_color_override);
+    let plain_key_style_override_match = agent
+        .filter(|name| !name.is_empty())
+        .map(|name| name.to_ascii_uppercase());
     view_with_background_style_and_right_info(
         hints,
         right_info,
@@ -85,6 +89,7 @@ pub fn view_with_right_info(
         theme,
         Some(theme.style(ThemeElement::BackgroundVoid)),
         bracket_key_style_override,
+        plain_key_style_override_match.as_deref(),
     );
 }
 
@@ -104,6 +109,7 @@ pub fn view_with_background_style(
         theme,
         background_style,
         None,
+        None,
     );
 }
 
@@ -115,6 +121,7 @@ fn view_with_background_style_and_right_info(
     theme: &Theme,
     background_style: Option<Style>,
     bracket_key_style_override: Option<Style>,
+    plain_key_style_override_match: Option<&str>,
 ) {
     if area.height == 0 {
         return;
@@ -169,6 +176,7 @@ fn view_with_background_style_and_right_info(
             "  ",
             Alignment::Left,
             bracket_key_style_override,
+            plain_key_style_override_match,
         );
     };
 
@@ -197,6 +205,7 @@ fn view_with_background_style_and_right_info(
                 "",
                 Alignment::Right,
                 bracket_key_style_override,
+                plain_key_style_override_match,
             );
         } else {
             render_left(frame, middle_area);
@@ -216,6 +225,7 @@ fn view_with_background_style_and_right_info(
                 "",
                 Alignment::Right,
                 bracket_key_style_override,
+                plain_key_style_override_match,
             );
         }
     }

@@ -59,12 +59,13 @@ pub fn render_help_bar_entries_aligned<'a, I>(
     I: IntoIterator<Item = HelpEntry<'a>>,
 {
     render_help_bar_entries_aligned_with_bracket_key_style(
-        frame, area, theme, entries, separator, alignment, None,
+        frame, area, theme, entries, separator, alignment, None, None,
     );
 }
 
 /// Render a help bar from structured entries with custom alignment and optional
-/// style override for bracketed keys (e.g. `[EXEC]`).
+/// style override for bracketed keys (e.g. `[EXEC]`) or one exact plain key
+/// match (e.g. `EXEC`).
 pub fn render_help_bar_entries_aligned_with_bracket_key_style<'a, I>(
     frame: &mut Frame,
     area: Rect,
@@ -73,6 +74,7 @@ pub fn render_help_bar_entries_aligned_with_bracket_key_style<'a, I>(
     separator: &str,
     alignment: Alignment,
     bracket_key_style_override: Option<Style>,
+    plain_key_style_override_match: Option<&str>,
 ) where
     I: IntoIterator<Item = HelpEntry<'a>>,
 {
@@ -94,7 +96,10 @@ pub fn render_help_bar_entries_aligned_with_bracket_key_style<'a, I>(
         let desc_is_empty = description.is_empty();
 
         if !key_is_empty {
-            let styled_key = if key.starts_with('[') {
+            let plain_key_matches = plain_key_style_override_match
+                .map(|plain_key| key.as_ref() == plain_key)
+                .unwrap_or(false);
+            let styled_key = if key.starts_with('[') || plain_key_matches {
                 bracket_key_style_override
                     .unwrap_or(keybind_style)
                     .add_modifier(Modifier::BOLD)
