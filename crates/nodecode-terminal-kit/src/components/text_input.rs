@@ -1,5 +1,5 @@
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
-use tui_textarea::{CursorMove, Input as TaInput, TextArea};
+use tui_textarea::{CursorMove, Input as TaInput, Key as TaKey, TextArea};
 use unicode_width::UnicodeWidthChar;
 
 use crate::layout::text::{
@@ -274,7 +274,7 @@ impl TextInput {
                 true
             }
             _ => self.apply_edit(|ta| {
-                ta.input(TaInput::from(key));
+                ta.input(ta_input_from_key_event(key));
             }),
         }
     }
@@ -313,4 +313,31 @@ fn textarea_from(text: &str) -> TextArea<'static> {
 
 fn join_lines(lines: &[String]) -> String {
     lines.join("\n")
+}
+
+fn ta_input_from_key_event(key: KeyEvent) -> TaInput {
+    let mapped = match key.code {
+        KeyCode::Backspace => TaKey::Backspace,
+        KeyCode::Enter => TaKey::Enter,
+        KeyCode::Left => TaKey::Left,
+        KeyCode::Right => TaKey::Right,
+        KeyCode::Up => TaKey::Up,
+        KeyCode::Down => TaKey::Down,
+        KeyCode::Tab | KeyCode::BackTab => TaKey::Tab,
+        KeyCode::Delete => TaKey::Delete,
+        KeyCode::Home => TaKey::Home,
+        KeyCode::End => TaKey::End,
+        KeyCode::PageUp => TaKey::PageUp,
+        KeyCode::PageDown => TaKey::PageDown,
+        KeyCode::Esc => TaKey::Esc,
+        KeyCode::Char(ch) => TaKey::Char(ch),
+        KeyCode::F(n) => TaKey::F(n),
+        _ => TaKey::Null,
+    };
+    TaInput {
+        key: mapped,
+        ctrl: key.modifiers.contains(KeyModifiers::CONTROL),
+        alt: key.modifiers.contains(KeyModifiers::ALT),
+        shift: key.modifiers.contains(KeyModifiers::SHIFT),
+    }
 }

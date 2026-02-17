@@ -16,9 +16,9 @@ name = "nodecode_terminal_kit"
 path = "src/lib.rs"
 
 [dependencies]
-ratatui = "0.28"
-crossterm = "0.28"
-tui-textarea = { version = "0.6.1", default-features = false, features = ["ratatui", "crossterm"] }
+ratatui = "0.30"
+crossterm = "0.29"
+tui-textarea = { version = "0.7.0", default-features = false, features = ["ratatui", "crossterm"] }
 unicode-width = "0.1"
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "2.0"
